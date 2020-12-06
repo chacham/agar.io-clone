@@ -45,10 +45,6 @@ class ChatClient {
             self.toggleContinuity();
         });
 
-        this.registerCommand('roundfood', 'Toggle food drawing.', function (args) {
-            self.toggleRoundFood(args);
-        });
-
         this.registerCommand('help', 'Information about the chat commands.', function () {
             self.printHelp();
         });
@@ -205,16 +201,6 @@ class ChatClient {
         } else {
             global.continuity = false;
             this.addSystemLine('Continuity disabled.');
-        }
-    }
-
-    toggleRoundFood(args) {
-        if (args || global.foodSides < 10) {
-            global.foodSides = (args && !isNaN(args[0]) && +args[0] >= 3) ? +args[0] : 10;
-            this.addSystemLine('Food is now rounded!');
-        } else {
-            global.foodSides = 5;
-            this.addSystemLine('Food is no longer rounded!');
         }
     }
 }
