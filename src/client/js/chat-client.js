@@ -33,17 +33,17 @@ class ChatClient {
             self.toggleDarkMode();
         });
 
-        this.registerCommand('border', 'Toggle visibility of border.', function () {
-            self.toggleBorder();
-        });
+        // this.registerCommand('border', 'Toggle visibility of border.', function () {
+        //     self.toggleBorder();
+        // });
 
-        this.registerCommand('mass', 'Toggle visibility of mass.', function () {
-            self.toggleMass();
-        });
+        // this.registerCommand('mass', 'Toggle visibility of mass.', function () {
+        //     self.toggleMass();
+        // });
 
-        this.registerCommand('continuity', 'Toggle continuity.', function () {
-            self.toggleContinuity();
-        });
+        // this.registerCommand('continuity', 'Toggle continuity.', function () {
+        //     self.toggleContinuity();
+        // });
 
         this.registerCommand('help', 'Information about the chat commands.', function () {
             self.printHelp();
@@ -53,9 +53,26 @@ class ChatClient {
             self.socket.emit('pass', args);
         });
 
-        this.registerCommand('kick', 'Kick a player, for admins only.', function (args) {
-            self.socket.emit('kick', args);
+        // this.registerCommand('kick', 'Kick a player, for admins only.', function (args) {
+        //     self.socket.emit('kick', args);
+        // });
+
+        this.registerCommand('dropO', 'ADMIN) Make users in O invisible', function (args) {
+            self.socket.emit('dropO', args);
         });
+
+        this.registerCommand('dropX', 'ADMIN) Make users in X invisible', function (args) {
+            self.socket.emit('dropX', args);
+        });
+
+        this.registerCommand('startGame', 'ADMIN) Make new users invisible', function (args) {
+            self.socket.emit('startGame', args);
+        });
+
+        this.registerCommand('resetGeme', 'ADMIN) Make all users visible', function (args) {
+            self.socket.emit('resetGeme', args);
+        });
+
         global.chatClient = this;
     }
 
@@ -174,35 +191,35 @@ class ChatClient {
         }
     }
 
-    toggleBorder() {
-        if (!global.borderDraw) {
-            global.borderDraw = true;
-            this.addSystemLine('Showing border.');
-        } else {
-            global.borderDraw = false;
-            this.addSystemLine('Hiding border.');
-        }
-    }
+    // toggleBorder() {
+    //     if (!global.borderDraw) {
+    //         global.borderDraw = true;
+    //         this.addSystemLine('Showing border.');
+    //     } else {
+    //         global.borderDraw = false;
+    //         this.addSystemLine('Hiding border.');
+    //     }
+    // }
 
-    toggleMass() {
-        if (global.toggleMassState === 0) {
-            global.toggleMassState = 1;
-            this.addSystemLine('Viewing mass enabled.');
-        } else {
-            global.toggleMassState = 0;
-            this.addSystemLine('Viewing mass disabled.');
-        }
-    }
+    // toggleMass() {
+    //     if (global.toggleMassState === 0) {
+    //         global.toggleMassState = 1;
+    //         this.addSystemLine('Viewing mass enabled.');
+    //     } else {
+    //         global.toggleMassState = 0;
+    //         this.addSystemLine('Viewing mass disabled.');
+    //     }
+    // }
 
-    toggleContinuity() {
-        if (!global.continuity) {
-            global.continuity = true;
-            this.addSystemLine('Continuity enabled.');
-        } else {
-            global.continuity = false;
-            this.addSystemLine('Continuity disabled.');
-        }
-    }
+    // toggleContinuity() {
+    //     if (!global.continuity) {
+    //         global.continuity = true;
+    //         this.addSystemLine('Continuity enabled.');
+    //     } else {
+    //         global.continuity = false;
+    //         this.addSystemLine('Continuity disabled.');
+    //     }
+    // }
 }
 
 module.exports = ChatClient;

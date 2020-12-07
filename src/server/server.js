@@ -180,7 +180,8 @@ io.on('connection', function (socket) {
         target: {
             x: 0,
             y: 0
-        }
+        },
+        visible: true,
     };
 
     socket.on('gotit', function (player) {
@@ -318,6 +319,47 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on('dropO', function(data) {
+        if (currentPlayer.admin) {
+            socket.emit('serverMSG', '정답은 X입니다!');
+            // Make invisible O users
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -dropO but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+
+    socket.on('dropX', function(data) {
+        if (currentPlayer.admin) {
+            socket.emit('serverMSG', '정답은 O입니다!');
+            // Make invisible X users
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -dropX but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+
+    socket.on('startGame', function(data) {
+        if (currentPlayer.admin) {
+            socket.emit('serverMSG', '퀴즈가 시작되었습니다! 재접속하면 우승할 수 없어요~');
+            // Make new users invisible
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -startGame but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+
+    socket.on('resetGeme', function(data) {
+        if (currentPlayer.admin) {
+            socket.emit('serverMSG', '퀴즈가 종료되었습니다~');
+            // Make all users visible
+            // Make new users visible
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -resetGeme but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+
     // Heartbeat function, update everytime.
     socket.on('0', function(target) {
         currentPlayer.lastHeartbeat = new Date().getTime();
@@ -367,6 +409,7 @@ function sendUpdates() {
         u.y = u.y || c.gameHeight / 2;
 
         var visibleCells  = users
+            // .filter(user => user.visible)
             .map(function(f) {
                 for(var z=0; z<f.cells.length; z++)
                 {
