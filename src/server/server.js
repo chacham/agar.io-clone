@@ -328,34 +328,7 @@ io.on('connection', function (socket) {
 });
 
 function tickPlayer(currentPlayer) {
-    if(currentPlayer.lastHeartbeat < new Date().getTime() - c.maxHeartbeatInterval) {
-        sockets[currentPlayer.id].emit('kick', 'Last heartbeat received over ' + c.maxHeartbeatInterval + ' ago.');
-        sockets[currentPlayer.id].disconnect();
-    }
-
     movePlayer(currentPlayer);
-
-    function collisionCheck(collision) {
-        if (collision.aUser.mass > collision.bUser.mass * 1.1  && collision.aUser.radius > Math.sqrt(Math.pow(collision.aUser.x - collision.bUser.x, 2) + Math.pow(collision.aUser.y - collision.bUser.y, 2))*1.75) {
-            console.log('[DEBUG] Killing user: ' + collision.bUser.id);
-            console.log('[DEBUG] Collision info:');
-            console.log(collision);
-
-            var numUser = util.findIndex(users, collision.bUser.id);
-            if (numUser > -1) {
-                if(users[numUser].cells.length > 1) {
-                    users[numUser].massTotal -= collision.bUser.mass;
-                    users[numUser].cells.splice(collision.bUser.num, 1);
-                } else {
-                    users.splice(numUser, 1);
-                    io.emit('playerDied', { name: collision.bUser.name });
-                    sockets[collision.bUser.id].emit('RIP');
-                }
-            }
-            currentPlayer.massTotal += collision.bUser.mass;
-            collision.aUser.mass += collision.bUser.mass;
-        }
-    }
 
     for(var z=0; z<currentPlayer.cells.length; z++) {
         var currentCell = currentPlayer.cells[z];
@@ -375,9 +348,6 @@ function tickPlayer(currentPlayer) {
 
         tree.clear();
         users.forEach(tree.put);
-        var playerCollisions = [];
-
-        playerCollisions.forEach(collisionCheck);
     }
 }
 
@@ -388,29 +358,6 @@ function moveloop() {
 }
 
 function gameloop() {
-    if (users.length > 0) {
-        users.sort( function(a, b) { return b.massTotal - a.massTotal; });
-
-        var topUsers = [];
-
-        for (var i = 0; i < Math.min(10, users.length); i++) {
-            if(users[i].type == 'player') {
-                topUsers.push({
-                    id: users[i].id,
-                    name: users[i].name
-                });
-            }
-        }
-        for (i = 0; i < users.length; i++) {
-            for(var z=0; z < users[i].cells.length; z++) {
-                if (users[i].cells[z].mass * (1 - (c.massLossRate / 1000)) > c.defaultPlayerMass && users[i].massTotal > c.minMassLoss) {
-                    var massLoss = users[i].cells[z].mass * (1 - (c.massLossRate / 1000));
-                    users[i].massTotal -= users[i].cells[z].mass - massLoss;
-                    users[i].cells[z].mass = massLoss;
-                }
-            }
-        }
-    }
 }
 
 function sendUpdates() {

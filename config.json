@@ -3,7 +3,7 @@
     "port": 3000,
     "logpath": "logger.php",
     "defaultPlayerMass": 10,
-    "gameWidth": 1000,
+    "gameWidth": 1500,
     "gameHeight": 1000,
     "adminPass": "DEFAULT",
     "gameMass": 20000,

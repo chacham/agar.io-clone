@@ -261,7 +261,6 @@ function drawCircle(centerX, centerY, radius, sides) {
 
     graph.closePath();
     graph.stroke();
-    graph.fill();
 }
 
 function drawPlayers(order) {
@@ -388,6 +387,43 @@ function drawgrid() {
     graph.globalAlpha = 1;
 }
 
+function drawOxBoard() {
+    graph.lineWidth = 1;
+    graph.strokeStyle = playerConfig.borderColor;
+
+    graph.beginPath();
+    graph.moveTo(global.screenWidth / 2 + global.gameWidth / 2 - player.x,
+        global.screenHeight / 2 - player.y);
+    graph.lineTo(global.screenWidth / 2 + global.gameWidth / 2 - player.x,
+        global.screenHeight / 2 + global.gameHeight - player.y);
+    graph.strokeStyle = global.lineColor;
+    graph.stroke();
+
+
+    graph.lineWidth = 5;
+
+    graph.strokeStyle = '#0000FF';
+    const radius = global.gameWidth / 6;
+    drawCircle(global.screenWidth / 2 + global.gameWidth / 4 - player.x,
+        global.screenHeight / 2 + global.gameHeight / 2 - player.y,
+        radius, 100);
+
+    graph.strokeStyle = '#FF0000';
+    graph.beginPath();
+    graph.moveTo(global.screenWidth / 2 + global.gameWidth - global.gameWidth / 8 - player.x,
+        global.screenHeight / 2 + global.gameHeight / 6 - player.y);
+    graph.lineTo(global.screenWidth / 2 + global.gameWidth / 2 + global.gameWidth / 8 - player.x,
+        global.screenHeight / 2 + global.gameHeight - global.gameHeight / 6 - player.y);
+    graph.stroke();
+
+    graph.beginPath();
+    graph.moveTo(global.screenWidth / 2 + global.gameWidth / 2 + global.gameWidth / 8 - player.x,
+        global.screenHeight / 2 + global.gameHeight / 6 - player.y);
+    graph.lineTo(global.screenWidth / 2 + global.gameWidth - global.gameWidth / 8 - player.x,
+        global.screenHeight / 2 + global.gameHeight - global.gameHeight / 6 - player.y);
+    graph.stroke();
+}
+
 function drawborder() {
     graph.lineWidth = 1;
     graph.strokeStyle = playerConfig.borderColor;
@@ -472,6 +508,7 @@ function gameLoop() {
 
             if (global.borderDraw) {
                 drawborder();
+                drawOxBoard();
             }
             var orderMass = [];
             for(var i=0; i<users.length; i++) {
