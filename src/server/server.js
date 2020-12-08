@@ -24,6 +24,7 @@ var tree = quadtree(0, 0, c.gameWidth, c.gameHeight);
 
 var users = [];
 var sockets = {};
+var gameStarted = false;
 
 var V = SAT.Vector;
 var C = SAT.Circle;
@@ -181,7 +182,7 @@ io.on('connection', function (socket) {
             x: 0,
             y: 0
         },
-        visible: true,
+        visible: !gameStarted,
     };
 
     socket.on('gotit', function (player) {
@@ -332,6 +333,11 @@ io.on('connection', function (socket) {
     socket.on('dropX', function(data) {
         if (currentPlayer.admin) {
             socket.emit('serverMSG', '정답은 O입니다!');
+            users.forEach(user => {
+                if (user.x > c.gameWidth / 2) {
+                    user.visible = false;
+                }
+            });
             // Make invisible X users
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -dropX but isn\'t an admin.');
@@ -342,6 +348,7 @@ io.on('connection', function (socket) {
     socket.on('startGame', function(data) {
         if (currentPlayer.admin) {
             socket.emit('serverMSG', '퀴즈가 시작되었습니다! 재접속하면 우승할 수 없어요~');
+            gameStarted = true;
             // Make new users invisible
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -startGame but isn\'t an admin.');
@@ -352,6 +359,8 @@ io.on('connection', function (socket) {
     socket.on('resetGeme', function(data) {
         if (currentPlayer.admin) {
             socket.emit('serverMSG', '퀴즈가 종료되었습니다~');
+            gameStarted = false;
+            // users.forEach
             // Make all users visible
             // Make new users visible
         } else {
