@@ -45,7 +45,7 @@ class ChatClient {
         //     self.toggleContinuity();
         // });
 
-        this.registerCommand('help', 'Information about the chat commands.', function () {
+        this.registerCommand('help', 'Help!', function () {
             self.printHelp();
         });
 
@@ -57,19 +57,19 @@ class ChatClient {
         //     self.socket.emit('kick', args);
         // });
 
-        this.registerCommand('dropO', 'ADMIN) Make users in O invisible', function (args) {
+        this.registerCommand('dropO', 'ADM) Drop users in O', function (args) {
             self.socket.emit('dropO', args);
         });
 
-        this.registerCommand('dropX', 'ADMIN) Make users in X invisible', function (args) {
+        this.registerCommand('dropX', 'ADM) Drop users in X', function (args) {
             self.socket.emit('dropX', args);
         });
 
-        this.registerCommand('startGame', 'ADMIN) Make new users invisible', function (args) {
+        this.registerCommand('startGame', 'ADM) Block new users', function (args) {
             self.socket.emit('startGame', args);
         });
 
-        this.registerCommand('resetGame', 'ADMIN) Make all users visible', function (args) {
+        this.registerCommand('resetGame', 'ADM) Reset Game', function (args) {
             self.socket.emit('resetGame', args);
         });
 
