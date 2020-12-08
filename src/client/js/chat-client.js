@@ -69,8 +69,8 @@ class ChatClient {
             self.socket.emit('startGame', args);
         });
 
-        this.registerCommand('resetGeme', 'ADMIN) Make all users visible', function (args) {
-            self.socket.emit('resetGeme', args);
+        this.registerCommand('resetGame', 'ADMIN) Make all users visible', function (args) {
+            self.socket.emit('resetGame', args);
         });
 
         global.chatClient = this;

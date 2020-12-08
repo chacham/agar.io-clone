@@ -116,38 +116,6 @@ function movePlayer(player) {
     player.y = y/player.cells.length;
 }
 
-function moveMass(mass) {
-    var deg = Math.atan2(mass.target.y, mass.target.x);
-    var deltaY = mass.speed * Math.sin(deg);
-    var deltaX = mass.speed * Math.cos(deg);
-
-    mass.speed -= 0.5;
-    if(mass.speed < 0) {
-        mass.speed = 0;
-    }
-    if (!isNaN(deltaY)) {
-        mass.y += deltaY;
-    }
-    if (!isNaN(deltaX)) {
-        mass.x += deltaX;
-    }
-
-    var borderCalc = mass.radius + 5;
-
-    if (mass.x > c.gameWidth - borderCalc) {
-        mass.x = c.gameWidth - borderCalc;
-    }
-    if (mass.y > c.gameHeight - borderCalc) {
-        mass.y = c.gameHeight - borderCalc;
-    }
-    if (mass.x < borderCalc) {
-        mass.x = borderCalc;
-    }
-    if (mass.y < borderCalc) {
-        mass.y = borderCalc;
-    }
-}
-
 io.on('connection', function (socket) {
     console.log('A user connected!', socket.handshake.query.type);
 
@@ -323,7 +291,11 @@ io.on('connection', function (socket) {
     socket.on('dropO', function(data) {
         if (currentPlayer.admin) {
             socket.emit('serverMSG', '정답은 X입니다!');
-            // Make invisible O users
+            users.forEach(user => {
+                if (user.x < c.gameWidth / 2) {
+                    user.visible = false;
+                }
+            });
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -dropO but isn\'t an admin.');
             socket.emit('serverMSG', 'You are not permitted to use this command.');
@@ -349,20 +321,19 @@ io.on('connection', function (socket) {
         if (currentPlayer.admin) {
             socket.emit('serverMSG', '퀴즈가 시작되었습니다! 재접속하면 우승할 수 없어요~');
             gameStarted = true;
-            // Make new users invisible
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -startGame but isn\'t an admin.');
             socket.emit('serverMSG', 'You are not permitted to use this command.');
         }
     });
 
-    socket.on('resetGeme', function(data) {
+    socket.on('resetGame', function(data) {
         if (currentPlayer.admin) {
             socket.emit('serverMSG', '퀴즈가 종료되었습니다~');
             gameStarted = false;
-            // users.forEach
-            // Make all users visible
-            // Make new users visible
+            users.forEach(user => {
+                user.visible = true;
+            });
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -resetGeme but isn\'t an admin.');
             socket.emit('serverMSG', 'You are not permitted to use this command.');
@@ -435,7 +406,8 @@ function sendUpdates() {
                                 cells: f.cells,
                                 massTotal: Math.round(f.massTotal),
                                 hue: f.hue,
-                                name: f.name
+                                name: f.name,
+                                visible: f.visible
                             };
                         } else {
                             //console.log("Nombre: " + f.name + " Es Usuario");
@@ -445,6 +417,7 @@ function sendUpdates() {
                                 cells: f.cells,
                                 massTotal: Math.round(f.massTotal),
                                 hue: f.hue,
+                                visible: f.visible
                             };
                         }
                     }

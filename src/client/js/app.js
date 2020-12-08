@@ -512,6 +512,9 @@ function gameLoop() {
             }
             var orderMass = [];
             for(var i=0; i<users.length; i++) {
+                if (!(users[i].visible)) {
+                    continue;
+                }
                 for(var j=0; j<users[i].cells.length; j++) {
                     orderMass.push({
                         nCell: i,
