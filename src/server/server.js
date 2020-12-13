@@ -25,6 +25,7 @@ var tree = quadtree(0, 0, c.gameWidth, c.gameHeight);
 var users = [];
 var sockets = {};
 var gameStarted = false;
+var pauseGame = false;
 
 var V = SAT.Vector;
 var C = SAT.Circle;
@@ -50,6 +51,9 @@ var initMassLog = util.log(c.defaultPlayerMass, c.slowBase);
 app.use(express.static(__dirname + '/../client'));
 
 function movePlayer(player) {
+    if (pauseGame) {
+        return;
+    }
     var x =0,y =0;
     for(var i=0; i<player.cells.length; i++)
     {
@@ -336,6 +340,24 @@ io.on('connection', function (socket) {
             });
         } else {
             console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -resetGeme but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+
+    socket.on('pause', function(data) {
+        if (currentPlayer.admin) {
+            pauseGame = true;
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -pause but isn\'t an admin.');
+            socket.emit('serverMSG', 'You are not permitted to use this command.');
+        }
+    });
+
+    socket.on('resume', function(data) {
+        if (currentPlayer.admin) {
+            pauseGame = false;
+        } else {
+            console.log('[ADMIN] ' + currentPlayer.name + ' is trying to use -resume but isn\'t an admin.');
             socket.emit('serverMSG', 'You are not permitted to use this command.');
         }
     });

@@ -73,6 +73,14 @@ class ChatClient {
             self.socket.emit('resetGame', args);
         });
 
+        this.registerCommand('pause', 'ADM) Pause Game', function (args) {
+            self.socket.emit('pause', args);
+        });
+
+        this.registerCommand('resume', 'ADM) Resume Game', function (args) {
+            self.socket.emit('resume', args);
+        });
+
         global.chatClient = this;
     }
 
