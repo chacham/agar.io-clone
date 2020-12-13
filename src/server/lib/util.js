@@ -5,7 +5,7 @@
 var cfg = require('../../../config.json');
 
 exports.validNick = function(nickname) {
-    var regex = /^\w*$/;
+    var regex = /^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9_]+$/;
     return regex.exec(nickname) !== null;
 };
 
